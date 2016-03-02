@@ -1,3 +1,3 @@
-# rousseff-kid-in-non-miracle-world
+# rousseff-kidd-in-non-miracle-world
 
-![A screenshot of Rousseff Kidd in Non Miracle World](https://raw.githubusercontent.com/tapiocalabs/snake-rousseff/master/alex-kidd.png)
+![A screenshot of Rousseff Kidd in Non Miracle World](https://raw.githubusercontent.com/tapiocalabs/snake-rousseff/master/alex-kidd.jpg)
