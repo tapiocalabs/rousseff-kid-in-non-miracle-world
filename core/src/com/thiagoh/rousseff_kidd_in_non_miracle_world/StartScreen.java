@@ -23,6 +23,8 @@ public class StartScreen extends ScreenAdapter {
 
     private static final float WORLD_WIDTH = 640.0f;
     private static final float WORLD_HEIGHT = 480.0f;
+    private static final float DILMA_WIDTH = 20.0f;
+    private static final float DILMA_HEIGHT = 32.0f;
     private final RousseffKiddInNonMiracleWorldGame game;
     private final ShapeRenderer shapeRenderer;
     private OrthographicCamera camera;
@@ -110,20 +112,24 @@ public class StartScreen extends ScreenAdapter {
 
         dilmaY = dilmaY + (velocity.y * 32 * delta);
 
+        if (dilmaX < 0) {
+            dilmaX = 0;
+        } else if (dilmaX > mapWidth) {
+            dilmaX = mapWidth;
+        }
+
+        if (dilmaY < 64) {
+            dilmaY = 64;
+        }
+
         if (dilmaY > 64) {
             velocity = velocity.mulAdd(gravity, delta);
         } else if (dilmaY <= 64) {
             velocity.y = 0;
         }
 
-//        Gdx.app.log("StartScreen", String.format("dilmaX %.2f ", dilmaX));
-//        Gdx.app.log("StartScreen", String.format("dilmaY %.2f velocity %.2f ", dilmaY, velocity.y));
-
-        if (dilmaX < 0) {
-            dilmaX = 0;
-        } else if (dilmaX > mapWidth) {
-            dilmaX = mapWidth;
-        }
+        Gdx.app.log("StartScreen", String.format("dilmaX %.2f ", dilmaX));
+        Gdx.app.log("StartScreen", String.format("dilmaY %.2f velocity %.2f ", dilmaY, velocity.y));
     }
 
     private void clearScreen() {
@@ -142,14 +148,12 @@ public class StartScreen extends ScreenAdapter {
         batch.setProjectionMatrix(camera.projection);
         batch.setTransformMatrix(camera.view);
 
-        final float height = 32;
-
         shapeRenderer.setProjectionMatrix(camera.projection);
         shapeRenderer.setTransformMatrix(camera.view);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         shapeRenderer.setColor(Color.WHITE);
-        shapeRenderer.rect(dilmaX, dilmaY + height, 20, height);
+        shapeRenderer.rect(dilmaX, dilmaY + DILMA_HEIGHT, DILMA_WIDTH, DILMA_HEIGHT);
         shapeRenderer.end();
 
         orthogonalTiledMapRenderer.render();
