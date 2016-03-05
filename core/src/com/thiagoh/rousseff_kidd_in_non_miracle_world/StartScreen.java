@@ -74,6 +74,8 @@ public class StartScreen extends ScreenAdapter {
     public void render(float delta) {
         super.render(delta);
 
+        Gdx.app.log("StartScreen render", String.format("fps %d", Gdx.graphics.getFramesPerSecond()));
+
         move(delta);
 
         clearScreen();
@@ -107,7 +109,7 @@ public class StartScreen extends ScreenAdapter {
         }
 
         if (space && velocity.y == 0) {
-            velocity.y = 10.0f;
+            velocity.y = 8.0f;
         }
 
         dilmaY = dilmaY + (velocity.y * 32 * delta);
@@ -128,8 +130,7 @@ public class StartScreen extends ScreenAdapter {
             velocity.y = 0;
         }
 
-        Gdx.app.log("StartScreen", String.format("dilmaX %.2f ", dilmaX));
-        Gdx.app.log("StartScreen", String.format("dilmaY %.2f velocity %.2f ", dilmaY, velocity.y));
+        Gdx.app.log("StartScreen", String.format("dilma X,Y %.2f %.2f velocity %.2f ", dilmaX, dilmaY, velocity.y));
     }
 
     private void clearScreen() {
