@@ -37,6 +37,7 @@ public class StartScreen extends ScreenAdapter {
     private float mapWidth;
     private Vector2 velocity;
     private Vector2 gravity;
+    private int fps;
 
     public StartScreen(RousseffKiddInNonMiracleWorldGame game) {
         this.game = game;
@@ -74,7 +75,10 @@ public class StartScreen extends ScreenAdapter {
     public void render(float delta) {
         super.render(delta);
 
-        Gdx.app.log("StartScreen render", String.format("fps %d", Gdx.graphics.getFramesPerSecond()));
+        fps = Gdx.graphics.getFramesPerSecond();
+        if (fps < 50) {
+            Gdx.app.log("StartScreen render", String.format("fps %d", fps));
+        }
 
         move(delta);
 
@@ -100,7 +104,7 @@ public class StartScreen extends ScreenAdapter {
 
         boolean left = Gdx.input.isKeyPressed(Input.Keys.LEFT);
         boolean right = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
-        boolean space = Gdx.input.isKeyPressed(Input.Keys.SPACE);
+        boolean jump = Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP);
 
         if (left) {
             dilmaX = dilmaX - (5.0f * 32 * delta);
@@ -108,7 +112,7 @@ public class StartScreen extends ScreenAdapter {
             dilmaX = dilmaX + (5.0f * 32 * delta);
         }
 
-        if (space && velocity.y == 0) {
+        if (jump && velocity.y == 0) {
             velocity.y = 8.0f;
         }
 
@@ -116,8 +120,8 @@ public class StartScreen extends ScreenAdapter {
 
         if (dilmaX < 0) {
             dilmaX = 0;
-        } else if (dilmaX > mapWidth) {
-            dilmaX = mapWidth;
+        } else if (dilmaX + DILMA_WIDTH > mapWidth) {
+            dilmaX = mapWidth - DILMA_WIDTH;
         }
 
         if (dilmaY < 64) {
