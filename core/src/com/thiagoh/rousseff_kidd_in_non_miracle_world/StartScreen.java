@@ -38,6 +38,7 @@ public class StartScreen extends ScreenAdapter {
     private Vector2 velocity;
     private Vector2 gravity;
     private int fps;
+    private int jump = 0;
 
     public StartScreen(RousseffKiddInNonMiracleWorldGame game) {
         this.game = game;
@@ -104,7 +105,7 @@ public class StartScreen extends ScreenAdapter {
 
         boolean left = Gdx.input.isKeyPressed(Input.Keys.LEFT);
         boolean right = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
-        boolean jump = Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP);
+        boolean actionJump = Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP);
 
         if (left) {
             dilmaX = dilmaX - (5.0f * 32 * delta);
@@ -112,8 +113,17 @@ public class StartScreen extends ScreenAdapter {
             dilmaX = dilmaX + (5.0f * 32 * delta);
         }
 
-        if (jump && velocity.y == 0) {
-            velocity.y = 8.0f;
+        if (actionJump) {
+            if (jump == 0) {
+                jump = 1;
+                velocity.y = 7.0f;
+            } else if (jump == 1 && velocity.y < 3.0f) {
+                jump = 2;
+                velocity.y = 5.0f;
+            } else if (jump == 2 && velocity.y < 3.0f) {
+                jump = 3;
+                velocity.y = 5.0f;
+            }
         }
 
         dilmaY = dilmaY + (velocity.y * 32 * delta);
@@ -126,6 +136,7 @@ public class StartScreen extends ScreenAdapter {
 
         if (dilmaY < 64) {
             dilmaY = 64;
+            jump = 0;
         }
 
         if (dilmaY > 64) {
