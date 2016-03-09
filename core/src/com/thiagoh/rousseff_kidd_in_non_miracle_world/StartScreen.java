@@ -18,104 +18,142 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 public class StartScreen extends ScreenAdapter {
 
-    private static final float WORLD_WIDTH = 20.0f;
-    private static final float WORLD_HEIGHT = 15.0f;
-    private final RousseffKiddInNonMiracleWorldGame game;
-    private final ShapeRenderer shapeRenderer;
-    private OrthographicCamera camera;
-    private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
-    private Viewport viewport;
-    private SpriteBatch batch;
-    private TiledMap tiledMap;
-    private float mapWidth;
-    private int fps;
-    private Dilma dilma;
+	public static final float WORLD_WIDTH = 20.0f;
+	public static final float WORLD_HEIGHT = 15.0f;
 
-    public StartScreen(RousseffKiddInNonMiracleWorldGame game) {
-        this.game = game;
-        shapeRenderer = new ShapeRenderer();
-    }
+	public static final float MAX_WORLD_HEIGHT = WORLD_HEIGHT * 2;
 
-    @Override
-    public void show() {
+	public static final float GROUND_HEIGHT = 3.0f;
+	private final RousseffKiddInNonMiracleWorldGame game;
+	private final ShapeRenderer shapeRenderer;
+	private OrthographicCamera camera;
+	private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
+	private Viewport viewport;
+	private SpriteBatch batch;
+	private TiledMap tiledMap;
+	private int fps;
+	private Dilma dilma;
 
-        AssetManager assetManager = game.getAssetManager();
+	public StartScreen(RousseffKiddInNonMiracleWorldGame game) {
+		this.game = game;
+		shapeRenderer = new ShapeRenderer();
+	}
 
-        batch = new SpriteBatch();
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, WORLD_WIDTH, WORLD_WIDTH);
-//        camera.zoom = 1.3f;
+	@Override
+	public void show() {
 
-        camera.update();
+		AssetManager assetManager = game.getAssetManager();
 
-        viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
-        viewport.apply(true);
+		batch = new SpriteBatch();
 
-        tiledMap = assetManager.get("tiles.tmx");
+		tiledMap = assetManager.get("tiles.tmx");
 
-        orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1f / 32f, batch);
-        orthogonalTiledMapRenderer.setView(camera);
 
-        TiledMapTileLayer mapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
-        mapWidth = mapLayer.getWidth();
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT);
 
-        dilma = new Dilma(tiledMap, shapeRenderer);
-        restartGame();
-    }
+		viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
+		viewport.apply(true);
 
-    @Override
-    public void render(float delta) {
-        super.render(delta);
+		dilma = new Dilma(3.0f, GROUND_HEIGHT + WORLD_HEIGHT, tiledMap, shapeRenderer);
 
-        fps = Gdx.graphics.getFramesPerSecond();
-        if (fps < 50) {
-            Gdx.app.log("StartScreen render", String.format("fps %d", fps));
-        }
+		float positionY = calculateCameraY();
 
-        dilma.update(delta);
+		camera.position.set(camera.position.x, positionY, camera.position.z);
+		camera.update();
 
-        clearScreen();
-        updateCamera();
-        draw();
-    }
+		orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1f / 32f, batch);
+		orthogonalTiledMapRenderer.setView(camera);
 
-    private void updateCamera() {
+		Gdx.app.log("StartScreen: updateY", String.format("camera.position.y %.2f", camera.position.y));
+		restartGame();
+	}
 
-        TiledMapTileLayer mapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
+	@Override
+	public void render(float delta) {
+		super.render(delta);
 
-        if (dilma.x >= WORLD_WIDTH / 2 && dilma.x <= mapWidth - (WORLD_WIDTH / 2)) {
+		fps = Gdx.graphics.getFramesPerSecond();
 
-            camera.position.set(dilma.x, camera.position.y, camera.position.z);
-            camera.update();
+		if (fps < 50) {
+			Gdx.app.log("StartScreen render", String.format("fps %d", fps));
+		}
 
-            orthogonalTiledMapRenderer.setView(camera);
-        }
-    }
+		dilma.update(delta);
 
-    private void clearScreen() {
-        Gdx.gl.glClearColor(0.4f, 0.4f, 1, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    }
+		clearScreen();
+		updateCamera();
+		draw();
+	}
 
-    @Override
-    public void resize(int width, int height) {
-        super.resize(width, height);
-        viewport.update(width, height);
-    }
 
-    private void draw() {
+	private void updateCamera() {
 
-        batch.setProjectionMatrix(camera.projection);
-        batch.setTransformMatrix(camera.view);
+		updateCameraX();
+		updateCameraY();
+	}
 
-        shapeRenderer.setProjectionMatrix(camera.projection);
-        shapeRenderer.setTransformMatrix(camera.view);
+	private void updateCameraX() {
 
-        orthogonalTiledMapRenderer.render();
-        dilma.draw();
-    }
+		TiledMapTileLayer mapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
+		boolean updateX = dilma.x >= WORLD_WIDTH / 2 && dilma.x <= mapLayer.getWidth() - (WORLD_WIDTH / 2);
 
-    private void restartGame() {
+		if (updateX) {
 
-    }
+			camera.position.set(dilma.x, camera.position.y, camera.position.z);
+			camera.update();
+
+			Gdx.app.log("StartScreen: updateX", String.format("camera.position.y %.2f", camera.position.y));
+
+			orthogonalTiledMapRenderer.setView(camera);
+		}
+	}
+
+	private float calculateCameraY() {
+
+		return dilma.y - StartScreen.GROUND_HEIGHT + (WORLD_HEIGHT / 2);
+	}
+
+	private void updateCameraY() {
+
+		float positionY = calculateCameraY();
+		boolean updateY = positionY >= WORLD_HEIGHT / 2 && positionY <= MAX_WORLD_HEIGHT / 2;
+
+		if (updateY) {
+
+			camera.position.set(camera.position.x, positionY, camera.position.z);
+			camera.update();
+
+			Gdx.app.log("StartScreen: updateY", String.format("camera.position.y %.2f", camera.position.y));
+
+			orthogonalTiledMapRenderer.setView(camera);
+		}
+	}
+
+	private void clearScreen() {
+		Gdx.gl.glClearColor(0.4f, 0.4f, 1, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		viewport.update(width, height);
+	}
+
+	private void draw() {
+
+		batch.setProjectionMatrix(camera.projection);
+		batch.setTransformMatrix(camera.view);
+
+		shapeRenderer.setProjectionMatrix(camera.projection);
+		shapeRenderer.setTransformMatrix(camera.view);
+
+		orthogonalTiledMapRenderer.render();
+		dilma.draw();
+	}
+
+	private void restartGame() {
+
+	}
 }
