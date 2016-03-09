@@ -1,10 +1,8 @@
 package com.thiagoh.rousseff_kidd_in_non_miracle_world;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,7 +10,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -21,10 +18,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 public class StartScreen extends ScreenAdapter {
 
-    private static final float WORLD_WIDTH = 640.0f;
-    private static final float WORLD_HEIGHT = 480.0f;
-    private static final float DILMA_WIDTH = 20.0f;
-    private static final float DILMA_HEIGHT = 32.0f;
+    private static final float WORLD_WIDTH = 20.0f;
+    private static final float WORLD_HEIGHT = 15.0f;
     private final RousseffKiddInNonMiracleWorldGame game;
     private final ShapeRenderer shapeRenderer;
     private OrthographicCamera camera;
@@ -32,13 +27,9 @@ public class StartScreen extends ScreenAdapter {
     private Viewport viewport;
     private SpriteBatch batch;
     private TiledMap tiledMap;
-    private float dilmaX;
-    private float dilmaY;
     private float mapWidth;
-    private Vector2 velocity;
-    private Vector2 gravity;
     private int fps;
-    private int jump = 0;
+    private Dilma dilma;
 
     public StartScreen(RousseffKiddInNonMiracleWorldGame game) {
         this.game = game;
@@ -52,23 +43,23 @@ public class StartScreen extends ScreenAdapter {
 
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
+        camera.setToOrtho(false, WORLD_WIDTH, WORLD_WIDTH);
+//        camera.zoom = 1.3f;
+
         camera.update();
+
         viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
         viewport.apply(true);
 
         tiledMap = assetManager.get("tiles.tmx");
 
-        orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, batch);
+        orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1f / 32f, batch);
         orthogonalTiledMapRenderer.setView(camera);
 
         TiledMapTileLayer mapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
-        mapWidth = mapLayer.getWidth() * mapLayer.getTileWidth();
+        mapWidth = mapLayer.getWidth();
 
-        velocity = new Vector2(0.0f, 0.0f);
-        gravity = new Vector2(0.0f, -20.0f);
-        dilmaX = 30.0f;
-        dilmaY = 64.0f;
-
+        dilma = new Dilma(tiledMap, shapeRenderer);
         restartGame();
     }
 
@@ -81,7 +72,7 @@ public class StartScreen extends ScreenAdapter {
             Gdx.app.log("StartScreen render", String.format("fps %d", fps));
         }
 
-        move(delta);
+        dilma.update(delta);
 
         clearScreen();
         updateCamera();
@@ -92,60 +83,13 @@ public class StartScreen extends ScreenAdapter {
 
         TiledMapTileLayer mapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
 
-        if (dilmaX >= WORLD_WIDTH / 2 && dilmaX <= mapWidth - (WORLD_WIDTH / 2)) {
+        if (dilma.x >= WORLD_WIDTH / 2 && dilma.x <= mapWidth - (WORLD_WIDTH / 2)) {
 
-            camera.position.set(dilmaX, camera.position.y, camera.position.z);
+            camera.position.set(dilma.x, camera.position.y, camera.position.z);
             camera.update();
 
             orthogonalTiledMapRenderer.setView(camera);
         }
-    }
-
-    private void move(float delta) {
-
-        boolean left = Gdx.input.isKeyPressed(Input.Keys.LEFT);
-        boolean right = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
-        boolean actionJump = Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP);
-
-        if (left) {
-            dilmaX = dilmaX - (5.0f * 32 * delta);
-        } else if (right) {
-            dilmaX = dilmaX + (5.0f * 32 * delta);
-        }
-
-        if (actionJump) {
-            if (jump == 0) {
-                jump = 1;
-                velocity.y = 7.0f;
-            } else if (jump == 1 && velocity.y < 3.0f) {
-                jump = 2;
-                velocity.y = 5.0f;
-            } else if (jump == 2 && velocity.y < 3.0f) {
-                jump = 3;
-                velocity.y = 5.0f;
-            }
-        }
-
-        dilmaY = dilmaY + (velocity.y * 32 * delta);
-
-        if (dilmaX < 0) {
-            dilmaX = 0;
-        } else if (dilmaX + DILMA_WIDTH > mapWidth) {
-            dilmaX = mapWidth - DILMA_WIDTH;
-        }
-
-        if (dilmaY < 64) {
-            dilmaY = 64;
-            jump = 0;
-        }
-
-        if (dilmaY > 64) {
-            velocity = velocity.mulAdd(gravity, delta);
-        } else if (dilmaY <= 64) {
-            velocity.y = 0;
-        }
-
-        Gdx.app.log("StartScreen", String.format("dilma X,Y %.2f %.2f velocity %.2f ", dilmaX, dilmaY, velocity.y));
     }
 
     private void clearScreen() {
@@ -167,12 +111,8 @@ public class StartScreen extends ScreenAdapter {
         shapeRenderer.setProjectionMatrix(camera.projection);
         shapeRenderer.setTransformMatrix(camera.view);
 
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.WHITE);
-        shapeRenderer.rect(dilmaX, dilmaY + DILMA_HEIGHT, DILMA_WIDTH, DILMA_HEIGHT);
-        shapeRenderer.end();
-
         orthogonalTiledMapRenderer.render();
+        dilma.draw();
     }
 
     private void restartGame() {
