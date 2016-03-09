@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolygonMapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Intersector;
@@ -35,6 +36,7 @@ public class Dilma {
     float y;
     float x;
     private int jump = 0;
+    private boolean landed = true;
     private boolean canIncJump = false;
     private Intersector.MinimumTranslationVector mtv = new Intersector.MinimumTranslationVector();
 
@@ -62,6 +64,16 @@ public class Dilma {
                 objectPolygon.setPosition(objectPolygon.getX() * 1f / 32f, objectPolygon.getY() * 1f / 32f);
 
                 Gdx.app.log("Dilma", String.format("PolygonMapObject x,y (%.2f,%.2f) width,height (%.2f,%.2f)", objectPolygon.getX(), objectPolygon.getY(), objectPolygon.getBoundingRectangle().width, objectPolygon.getBoundingRectangle().height));
+            } else if (object instanceof RectangleMapObject) {
+
+                RectangleMapObject rectangleMapObject = (RectangleMapObject) object;
+
+                Rectangle rectangle = rectangleMapObject.getRectangle();
+                rectangle.setWidth(rectangle.getWidth() * 1f / 32f);
+                rectangle.setHeight(rectangle.getHeight() * 1f / 32f);
+                rectangle.setPosition(rectangle.getX() * 1f / 32f, rectangle.getY() * 1f / 32f);
+
+                Gdx.app.log("Dilma", String.format("RectangleMapObject x,y (%.2f,%.2f) width,height (%.2f,%.2f)", rectangle.getX(), rectangle.getY(), rectangle.width, rectangle.height));
             }
 
 //            MapProperties properties = object.getProperties();
@@ -89,19 +101,47 @@ public class Dilma {
 
         dilmaPolygon.setPosition(x, y);
 
+        Polygon tmp = new Polygon();
+
         for (int i = 0; i < objects.getCount(); i++) {
             MapObject object = objects.get(i);
 
+            Polygon objectPolygon = null;
+
             if (object instanceof PolygonMapObject) {
                 PolygonMapObject polygonMapObject = (PolygonMapObject) object;
-                Polygon objectPolygon = polygonMapObject.getPolygon();
+                objectPolygon = polygonMapObject.getPolygon();
 
                 Gdx.app.log("Dilma", String.format("PolygonMapObject x,y (%.2f,%.2f) width,height (%.2f,%.2f)", objectPolygon.getX(), objectPolygon.getY(), objectPolygon.getBoundingRectangle().width, objectPolygon.getBoundingRectangle().height));
+            } else if (object instanceof RectangleMapObject) {
 
-                boolean overlaps = Intersector.overlapConvexPolygons(objectPolygon, dilmaPolygon, mtv);
+                RectangleMapObject rectangleMapObject = (RectangleMapObject) object;
+                Rectangle rectangle = rectangleMapObject.getRectangle();
 
-                if (overlaps) {
-                    Gdx.app.log("Dilma", String.format("Object %d is overlapping by (x,y) (%.2f,%.2f,%.2f) ", i, mtv.normal.x, mtv.normal.y, mtv.depth));
+                objectPolygon = tmp;
+                objectPolygon.setVertices(new float[]{0, 0, rectangle.width, 0, rectangle.width, rectangle.height, 0, rectangle.height});
+                objectPolygon.setPosition(rectangle.x, rectangle.y);
+
+                Gdx.app.log("Dilma", String.format("RectangleMapObject x,y (%.2f,%.2f) width,height (%.2f,%.2f)", rectangle.x, rectangle.y, rectangle.width, rectangle.height));
+            }
+
+            boolean overlaps = Intersector.overlapConvexPolygons(dilmaPolygon, objectPolygon, mtv);
+
+            if (overlaps) {
+                Gdx.app.log("Dilma", String.format("Object %d is overlapping by (x,y) (%.2f,%.2f,%.2f) ", i, mtv.normal.x, mtv.normal.y, mtv.depth));
+
+//                    if (Math.abs(mtv.normal.x) < Math.abs(mtv.normal.y)) {
+//                        x += mtv.normal.x * mtv.depth;
+//                    } else {
+                x += mtv.normal.x * mtv.depth;
+                y += mtv.normal.y * mtv.depth;
+//                    }
+
+                if (Math.abs(mtv.normal.y) > 0) {
+                    jump = 0;
+                    landed = true;
+                    velocity.y = 0;
+                    canIncJump = false;
                 }
             }
 
@@ -136,6 +176,7 @@ public class Dilma {
         if (actionJump) {
             if (jump == 0) {
                 jump = 1;
+                landed = false;
                 canIncJump = true;
                 velocity.y = 6.0f;
             } else if (canIncJump && jump == 1 && velocity.y < 5.0f) {
@@ -176,12 +217,7 @@ public class Dilma {
         TiledMapTileLayer mapLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
 
         x = MathUtils.clamp(x, 0, mapLayer.getWidth() - DILMA_WIDTH);
-        y = MathUtils.clamp(y, 3, 15);
-
-        if (y <= 3) {
-            jump = 0;
-            canIncJump = false;
-        }
+        y = MathUtils.clamp(y, 0, 15);
 
         Gdx.app.log("Dilma", String.format("X,Y (%.2f,%.2f) velocity (x,y) (%.2f,%.2f) ", x, y, velocity.x, velocity.y));
     }
