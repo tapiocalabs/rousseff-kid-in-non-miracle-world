@@ -112,7 +112,7 @@ public class Dilma {
                 PolygonMapObject polygonMapObject = (PolygonMapObject) object;
                 objectPolygon = polygonMapObject.getPolygon();
 
-                Gdx.app.log("Dilma", String.format("PolygonMapObject x,y (%.2f,%.2f) width,height (%.2f,%.2f)", objectPolygon.getX(), objectPolygon.getY(), objectPolygon.getBoundingRectangle().width, objectPolygon.getBoundingRectangle().height));
+//                Gdx.app.log("Dilma", String.format("PolygonMapObject x,y (%.2f,%.2f) width,height (%.2f,%.2f)", objectPolygon.getX(), objectPolygon.getY(), objectPolygon.getBoundingRectangle().width, objectPolygon.getBoundingRectangle().height));
             } else if (object instanceof RectangleMapObject) {
 
                 RectangleMapObject rectangleMapObject = (RectangleMapObject) object;
@@ -122,20 +122,23 @@ public class Dilma {
                 objectPolygon.setVertices(new float[]{0, 0, rectangle.width, 0, rectangle.width, rectangle.height, 0, rectangle.height});
                 objectPolygon.setPosition(rectangle.x, rectangle.y);
 
-                Gdx.app.log("Dilma", String.format("RectangleMapObject x,y (%.2f,%.2f) width,height (%.2f,%.2f)", rectangle.x, rectangle.y, rectangle.width, rectangle.height));
+//                Gdx.app.log("Dilma", String.format("RectangleMapObject x,y (%.2f,%.2f) width,height (%.2f,%.2f)", rectangle.x, rectangle.y, rectangle.width, rectangle.height));
             }
 
+            if (objectPolygon == null) {
+                continue;
+            }
             boolean overlaps = Intersector.overlapConvexPolygons(dilmaPolygon, objectPolygon, mtv);
 
             if (overlaps) {
                 Gdx.app.log("Dilma", String.format("Object %d is overlapping by (x,y) (%.2f,%.2f,%.2f) ", i, mtv.normal.x, mtv.normal.y, mtv.depth));
 
-//                    if (Math.abs(mtv.normal.x) < Math.abs(mtv.normal.y)) {
-//                        x += mtv.normal.x * mtv.depth;
-//                    } else {
                 x += mtv.normal.x * mtv.depth;
                 y += mtv.normal.y * mtv.depth;
-//                    }
+
+                if (Math.abs(mtv.normal.x) > 0 && mtv.normal.y == 0) {
+                    velocity.x = 0;
+                }
 
                 if (Math.abs(mtv.normal.y) > 0) {
                     jump = 0;
