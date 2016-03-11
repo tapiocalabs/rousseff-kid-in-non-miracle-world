@@ -42,7 +42,6 @@ public class StartScreen extends ScreenAdapter {
 	private MapLayer collisionLayer;
 	private TiledMapTileLayer backgroundLayer;
 
-
 	public StartScreen(RousseffKiddInNonMiracleWorldGame game) {
 		this.game = game;
 		shapeRenderer = new ShapeRenderer();
