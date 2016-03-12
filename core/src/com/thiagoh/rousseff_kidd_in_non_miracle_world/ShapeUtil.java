@@ -14,56 +14,56 @@ import com.badlogic.gdx.math.Rectangle;
  */
 public class ShapeUtil {
 
-    public static final void scale(final MapLayer layer, float scale) {
+   public static final void scale(final MapLayer layer, float scale) {
 
-        MapObjects objects = layer.getObjects();
+      MapObjects objects = layer.getObjects();
 
-        for (int i = 0; i < objects.getCount(); i++) {
-            MapObject object = objects.get(i);
+      for (int i = 0; i < objects.getCount(); i++) {
+         MapObject object = objects.get(i);
 
-            scale(object, scale);
-        }
-    }
+         scale(object, scale);
+      }
+   }
 
-    public static final MapObject scale(final MapObject object, float scale) {
+   public static final MapObject scale(final MapObject object, float scale) {
 
-        if (object instanceof PolygonMapObject) {
+      if (object instanceof PolygonMapObject) {
 
-            PolygonMapObject polygonMapObject = (PolygonMapObject) object;
-            Polygon polygon = polygonMapObject.getPolygon();
+         PolygonMapObject polygonMapObject = (PolygonMapObject) object;
+         Polygon polygon = polygonMapObject.getPolygon();
 
-            scale(polygon, scale);
+         scale(polygon, scale);
 
-            Gdx.app.log("ShapeUtil", String.format("PolygonMapObject x,y (%.2f,%.2f) width,height (%.2f,%.2f)", polygon.getX(), polygon.getY(), polygon.getBoundingRectangle().width, polygon.getBoundingRectangle().height));
-        } else if (object instanceof RectangleMapObject) {
+         Gdx.app.log("ShapeUtil", String.format("PolygonMapObject x,y (%.2f,%.2f) width,height (%.2f,%.2f)", polygon.getX(), polygon.getY(), polygon.getBoundingRectangle().width, polygon.getBoundingRectangle().height));
+      } else if (object instanceof RectangleMapObject) {
 
-            RectangleMapObject rectangleMapObject = (RectangleMapObject) object;
-            Rectangle rectangle = rectangleMapObject.getRectangle();
+         RectangleMapObject rectangleMapObject = (RectangleMapObject) object;
+         Rectangle rectangle = rectangleMapObject.getRectangle();
 
-            scale(rectangle, scale);
+         scale(rectangle, scale);
 
-            Gdx.app.log("ShapeUtil", String.format("RectangleMapObject x,y (%.2f,%.2f) width,height (%.2f,%.2f)", rectangle.getX(), rectangle.getY(), rectangle.width, rectangle.height));
-        } else {
-            throw new RuntimeException();
-        }
+         Gdx.app.log("ShapeUtil", String.format("RectangleMapObject x,y (%.2f,%.2f) width,height (%.2f,%.2f)", rectangle.getX(), rectangle.getY(), rectangle.width, rectangle.height));
+      } else {
+         throw new RuntimeException();
+      }
 
-        return object;
-    }
+      return object;
+   }
 
-    public static final Polygon scale(final Polygon polygon, float scale) {
+   public static final Polygon scale(final Polygon polygon, float scale) {
 
-        polygon.setScale(scale, scale);
-        polygon.setPosition(polygon.getX() * scale, polygon.getY() * scale);
+      polygon.setScale(scale, scale);
+      polygon.setPosition(polygon.getX() * scale, polygon.getY() * scale);
 
-        return polygon;
-    }
+      return polygon;
+   }
 
-    public static final Rectangle scale(final Rectangle rectangle, float scale) {
+   public static final Rectangle scale(final Rectangle rectangle, float scale) {
 
-        rectangle.setWidth(rectangle.getWidth() * scale);
-        rectangle.setHeight(rectangle.getHeight() * scale);
-        rectangle.setPosition(rectangle.getX() * scale, rectangle.getY() * scale);
+      rectangle.setWidth(rectangle.getWidth() * scale);
+      rectangle.setHeight(rectangle.getHeight() * scale);
+      rectangle.setPosition(rectangle.getX() * scale, rectangle.getY() * scale);
 
-        return rectangle;
-    }
+      return rectangle;
+   }
 }
