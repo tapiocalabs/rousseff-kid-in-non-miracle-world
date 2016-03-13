@@ -58,6 +58,29 @@ public class ShapeUtil {
       return polygon;
    }
 
+   public static final void fillPolygon(final MapObject object, final Polygon polygon) {
+
+      if (object instanceof PolygonMapObject) {
+         PolygonMapObject polygonMapObject = (PolygonMapObject) object;
+         Polygon objectPolygon = polygonMapObject.getPolygon();
+
+         polygon.setVertices(objectPolygon.getVertices());
+         polygon.setPosition(objectPolygon.getX(), objectPolygon.getY());
+         polygon.setScale(objectPolygon.getScaleX(), objectPolygon.getScaleY());
+         polygon.setOrigin(objectPolygon.getOriginX(), objectPolygon.getOriginY());
+         polygon.setRotation(objectPolygon.getRotation());
+      } else if (object instanceof RectangleMapObject) {
+
+         RectangleMapObject rectangleMapObject = (RectangleMapObject) object;
+         Rectangle rectangle = rectangleMapObject.getRectangle();
+
+         polygon.setVertices(new float[]{0, 0, rectangle.width, 0, rectangle.width, rectangle.height, 0, rectangle.height});
+         polygon.setPosition(rectangle.x, rectangle.y);
+      } else {
+         throw new RuntimeException("No such type: " + object.getClass().getName());
+      }
+   }
+
    public static final Rectangle scale(final Rectangle rectangle, float scale) {
 
       rectangle.setWidth(rectangle.getWidth() * scale);

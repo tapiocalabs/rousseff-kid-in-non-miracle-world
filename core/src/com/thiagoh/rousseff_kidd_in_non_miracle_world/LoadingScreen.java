@@ -67,7 +67,7 @@ public class LoadingScreen extends ScreenAdapter {
       AssetManager assetManager = game.getAssetManager();
 
       if (assetManager.update()) {
-         game.setScreen(new StartScreen(game));
+         game.setScreen(new MainScreen(game));
       } else {
          progress = assetManager.getProgress();
       }

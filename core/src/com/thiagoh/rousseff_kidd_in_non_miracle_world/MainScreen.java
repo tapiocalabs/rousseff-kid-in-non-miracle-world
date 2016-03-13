@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 /**
  * Created by thiago on 03/03/16.
  */
-public class StartScreen extends ScreenAdapter {
+public class MainScreen extends ScreenAdapter {
 
    public static final float WORLD_WIDTH = 20.0f;
    public static final float WORLD_HEIGHT = 15.0f;
@@ -29,22 +29,22 @@ public class StartScreen extends ScreenAdapter {
    private static final float CAMERA_HEIGHT_FROM_DILMA_Y = 4.5f;
 
    private final RousseffKiddInNonMiracleWorldGame game;
-   private final ShapeRenderer shapeRenderer;
+   ShapeRenderer shapeRenderer;
+   SpriteBatch batch;
+   TiledMap map;
+   MapLayer positionLayer;
+   MapLayer ceilLayer;
+   MapLayer collisionLayer;
+   MapLayer collectablesLayer;
+   TiledMapTileLayer backgroundLayer;
    private OrthographicCamera camera;
    private OrthogonalTiledMapRenderer orthogonalTiledMapRenderer;
    private Viewport viewport;
-   private SpriteBatch batch;
    private int fps;
    private Dilma dilma;
-   private TiledMap tiledMap;
-   private MapLayer positionLayer;
-   private MapLayer ceilLayer;
-   private MapLayer collisionLayer;
-   private TiledMapTileLayer backgroundLayer;
 
-   public StartScreen(RousseffKiddInNonMiracleWorldGame game) {
-      this.game = game;
-      shapeRenderer = new ShapeRenderer();
+   public MainScreen(RousseffKiddInNonMiracleWorldGame rousseffKiddInNonMiracleWorldGame) {
+      game = rousseffKiddInNonMiracleWorldGame;
    }
 
    @Override
@@ -52,9 +52,10 @@ public class StartScreen extends ScreenAdapter {
 
       AssetManager assetManager = game.getAssetManager();
 
-      batch = new SpriteBatch();
+      map = assetManager.get("tiles.tmx");
 
-      tiledMap = assetManager.get("tiles.tmx");
+      shapeRenderer = new ShapeRenderer();
+      batch = new SpriteBatch();
 
       camera = new OrthographicCamera();
       camera.setToOrtho(false, WORLD_WIDTH, WORLD_HEIGHT * 2);
@@ -63,18 +64,19 @@ public class StartScreen extends ScreenAdapter {
       viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
       viewport.apply(true);
 
-      positionLayer = tiledMap.getLayers().get("position");
-      ceilLayer = tiledMap.getLayers().get("ceils");
-      collisionLayer = tiledMap.getLayers().get("collision");
-      backgroundLayer = (TiledMapTileLayer) tiledMap.getLayers().get("background");
+      positionLayer = map.getLayers().get("position");
+      ceilLayer = map.getLayers().get("ceils");
+      collisionLayer = map.getLayers().get("collision");
+      collectablesLayer = map.getLayers().get("collectables");
+      backgroundLayer = (TiledMapTileLayer) map.getLayers().get("background");
 
       ShapeUtil.scale(positionLayer, 1f / 32f);
       ShapeUtil.scale(ceilLayer, 1f / 32f);
       ShapeUtil.scale(collisionLayer, 1f / 32f);
       ShapeUtil.scale(backgroundLayer, 1f / 32f);
 
-      dilma = new Dilma(0, 0, tiledMap, shapeRenderer);
-      orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap, 1f / 32f, batch);
+      dilma = new Dilma(this, 0, 0);
+      orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(map, 1f / 32f, batch);
 
       restartGame();
    }
@@ -94,7 +96,7 @@ public class StartScreen extends ScreenAdapter {
 
       orthogonalTiledMapRenderer.setView(camera);
 
-      Gdx.app.log("StartScreen", String.format("camera.position (%.2f,%.2f)", camera.position.x, camera.position.y));
+      Gdx.app.log("MainScreen", String.format("camera.position (%.2f,%.2f)", camera.position.x, camera.position.y));
    }
 
    private float calculateCameraX() {
@@ -109,7 +111,7 @@ public class StartScreen extends ScreenAdapter {
       fps = Gdx.graphics.getFramesPerSecond();
 
       if (fps < 50) {
-         Gdx.app.log("StartScreen render", String.format("fps %d", fps));
+         Gdx.app.log("MainScreen render", String.format("fps %d", fps));
       }
 
       dilma.update(delta);
@@ -128,7 +130,7 @@ public class StartScreen extends ScreenAdapter {
       updateCameraY();
 
       if (cameraX != camera.position.x || cameraY != camera.position.y) {
-         Gdx.app.log("StartScreen", String.format("camera.position (%.2f,%.2f)", camera.position.x, camera.position.y));
+         Gdx.app.log("MainScreen", String.format("camera.position (%.2f,%.2f)", camera.position.x, camera.position.y));
       }
    }
 
