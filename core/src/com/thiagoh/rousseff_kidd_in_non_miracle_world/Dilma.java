@@ -25,18 +25,22 @@ public class Dilma {
    private static final float MAX_VELOCITY = 6.0f;
    private static final float MOVEMENT_RESISTENCY = 20.0f;
    private static final float INITIAL_X_VELOCITY = 3.0f;
+   private static final float INITIAL_Y_VELOCITY = 3.0f;
    final Rectangle bounds = new Rectangle(0, 0, DILMA_WIDTH, DILMA_HEIGHT);
-   private final Polygon dilmaPolygon = new Polygon(new float[]{0, 0, DILMA_WIDTH, 0, DILMA_WIDTH, DILMA_HEIGHT, 0, DILMA_HEIGHT});
+   private final Polygon polygon = new Polygon(new float[]{0, 0, DILMA_WIDTH, 0, DILMA_WIDTH, DILMA_HEIGHT, 0, DILMA_HEIGHT});
    private SpriteBatch batch;
    private ShapeRenderer shapeRenderer;
    private Vector2 velocity;
    private Vector2 gravity;
    private TiledMap map;
    private MapObjects collisionObjects;
+   private MapObjects laddersObjects;
    private int jump = 0;
    private boolean landed = true;
    private boolean canIncJump = false;
    private Intersector.MinimumTranslationVector mtv = new Intersector.MinimumTranslationVector();
+   private Polygon tmpPolygon = new Polygon();
+   private boolean holdingLadder = false;
 
    public Dilma(MainScreen mainScreen, float x, float y) {
 
@@ -45,6 +49,7 @@ public class Dilma {
       bounds.y = y;
 
       collisionObjects = mainScreen.collisionLayer.getObjects();
+      laddersObjects = mainScreen.laddersLayer.getObjects();
 
       shapeRenderer = mainScreen.shapeRenderer;
       batch = mainScreen.batch;
@@ -68,18 +73,29 @@ public class Dilma {
       handleCollision(delta);
    }
 
+   private boolean overlapsLadders(float delta) {
+
+      boolean overlaps = false;
+
+      for (int i = 0; !overlaps && i < laddersObjects.getCount(); i++) {
+         MapObject object = laddersObjects.get(i);
+
+         ShapeUtil.fillPolygon(object, tmpPolygon);
+
+         overlaps = Intersector.overlapConvexPolygons(polygon, tmpPolygon, null);
+      }
+
+      return overlaps;
+   }
+
    private void handleCollision(float delta) {
-
-      dilmaPolygon.setPosition(bounds.x, bounds.y);
-
-      Polygon objectPolygon = new Polygon();
 
       for (int i = 0; i < collisionObjects.getCount(); i++) {
          MapObject object = collisionObjects.get(i);
 
-         ShapeUtil.fillPolygon(object, objectPolygon);
+         ShapeUtil.fillPolygon(object, tmpPolygon);
 
-         boolean overlaps = Intersector.overlapConvexPolygons(dilmaPolygon, objectPolygon, mtv);
+         boolean overlaps = Intersector.overlapConvexPolygons(polygon, tmpPolygon, mtv);
 
          if (overlaps) {
             Gdx.app.log("Dilma", String.format("Object %d is overlapping by (x,y) (%.2f,%.2f,%.2f) ", i, mtv.normal.x, mtv.normal.y, mtv.depth));
@@ -134,6 +150,34 @@ public class Dilma {
 
       velocity.mulAdd(gravity, delta);
 
+      boolean overlapsLadders = overlapsLadders(delta);
+
+      boolean up = Gdx.input.isKeyPressed(Input.Keys.UP);
+      boolean down = Gdx.input.isKeyPressed(Input.Keys.DOWN);
+
+      if (overlapsLadders) {
+         if (up || down) {
+            holdingLadder = true;
+         }
+      } else {
+         holdingLadder = false;
+      }
+
+      if (holdingLadder) {
+
+         velocity.y = 0f;
+
+         if (up || down) {
+            if (velocity.y <= 1f && velocity.y >= -1f) {
+               velocity.y = (down ? -1f : 1f) * INITIAL_Y_VELOCITY;
+            } else if (down && velocity.y > 0 || up && velocity.y < 0) {
+               velocity.y += (velocity.y > 0 ? -1f : 1f) * (MOVEMENT_RESISTENCY + INITIAL_Y_VELOCITY) * delta;
+            } else {
+               velocity.y += (down ? -1f : 1f) * MOVEMENT_RESISTENCY * delta;
+            }
+         }
+      }
+
       if (left || right) {
          if (velocity.x <= 1f && velocity.x >= -1f) {
             velocity.x = (left ? -1f : 1f) * INITIAL_X_VELOCITY;
@@ -143,6 +187,7 @@ public class Dilma {
             velocity.x += (left ? -1f : 1f) * 5f * delta;
          }
       } else {
+         // inertia
          if (velocity.x > 1f || velocity.x < -1f) {
             velocity.x += (velocity.x > 0 ? -1f : 1f) * MOVEMENT_RESISTENCY * delta;
          } else if (velocity.x <= 1f && velocity.x >= -1f) {
@@ -160,6 +205,8 @@ public class Dilma {
 
       bounds.x = MathUtils.clamp(bounds.x, 0, mapLayer.getWidth() - DILMA_WIDTH);
       bounds.y = MathUtils.clamp(bounds.y, 0, MainScreen.WORLD_HEIGHT * 2f);
+
+      polygon.setPosition(bounds.x, bounds.y);
 
       Gdx.app.log("Dilma", String.format("X,Y (%.2f,%.2f) velocity (x,y) (%.2f,%.2f) ", bounds.x, bounds.y, velocity.x, velocity.y));
    }

@@ -27,7 +27,7 @@
   <object id="321" x="224" y="864" width="352" height="64"/>
  </objectgroup>
  <objectgroup name="position">
-  <object id="281" name="initial" x="2592" y="480" width="32" height="32"/>
+  <object id="281" name="initial" x="704" y="960" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="ceils">
   <object id="286" name="ceil1" x="0" y="192" width="32" height="320"/>

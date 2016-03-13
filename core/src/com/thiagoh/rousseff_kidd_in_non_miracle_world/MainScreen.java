@@ -35,6 +35,7 @@ public class MainScreen extends ScreenAdapter {
    MapLayer positionLayer;
    MapLayer ceilLayer;
    MapLayer collisionLayer;
+   MapLayer laddersLayer;
    MapLayer collectablesLayer;
    TiledMapTileLayer backgroundLayer;
    private OrthographicCamera camera;
@@ -42,6 +43,7 @@ public class MainScreen extends ScreenAdapter {
    private Viewport viewport;
    private int fps;
    private Dilma dilma;
+   private float scaleUnit = 1f / 32f;
 
    public MainScreen(RousseffKiddInNonMiracleWorldGame rousseffKiddInNonMiracleWorldGame) {
       game = rousseffKiddInNonMiracleWorldGame;
@@ -68,15 +70,17 @@ public class MainScreen extends ScreenAdapter {
       ceilLayer = map.getLayers().get("ceils");
       collisionLayer = map.getLayers().get("collision");
       collectablesLayer = map.getLayers().get("collectables");
+      laddersLayer = map.getLayers().get("ladders");
       backgroundLayer = (TiledMapTileLayer) map.getLayers().get("background");
 
-      ShapeUtil.scale(positionLayer, 1f / 32f);
-      ShapeUtil.scale(ceilLayer, 1f / 32f);
-      ShapeUtil.scale(collisionLayer, 1f / 32f);
-      ShapeUtil.scale(backgroundLayer, 1f / 32f);
+      ShapeUtil.scale(positionLayer, scaleUnit);
+      ShapeUtil.scale(ceilLayer, scaleUnit);
+      ShapeUtil.scale(laddersLayer, scaleUnit);
+      ShapeUtil.scale(collisionLayer, scaleUnit);
+      ShapeUtil.scale(backgroundLayer, scaleUnit);
 
       dilma = new Dilma(this, 0, 0);
-      orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(map, 1f / 32f, batch);
+      orthogonalTiledMapRenderer = new OrthogonalTiledMapRenderer(map, scaleUnit, batch);
 
       restartGame();
    }

@@ -60,6 +60,11 @@ public class ShapeUtil {
 
    public static final void fillPolygon(final MapObject object, final Polygon polygon) {
 
+      polygon.setPosition(0, 0);
+      polygon.setScale(1f, 1f);
+      polygon.setOrigin(0, 0);
+      polygon.setRotation(0);
+
       if (object instanceof PolygonMapObject) {
          PolygonMapObject polygonMapObject = (PolygonMapObject) object;
          Polygon objectPolygon = polygonMapObject.getPolygon();
