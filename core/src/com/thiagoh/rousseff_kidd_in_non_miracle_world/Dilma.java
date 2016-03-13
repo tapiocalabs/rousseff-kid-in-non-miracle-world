@@ -191,6 +191,8 @@ public class Dilma {
 
    private void handleCollision(float delta) {
 
+      landed = false;
+
       for (int i = 0; i < collisionObjects.getCount(); i++) {
          MapObject object = collisionObjects.get(i);
 
