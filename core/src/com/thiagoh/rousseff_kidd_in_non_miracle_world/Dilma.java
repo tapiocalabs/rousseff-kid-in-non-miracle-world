@@ -40,7 +40,8 @@ public class Dilma {
    private boolean canIncJump = false;
    private Intersector.MinimumTranslationVector mtv = new Intersector.MinimumTranslationVector();
    private Polygon tmpPolygon = new Polygon();
-   private boolean holdingLadder = false;
+   private boolean holdingLadder;
+   private boolean canJumpAgain;
 
    public Dilma(MainScreen mainScreen, float x, float y) {
 
@@ -55,6 +56,9 @@ public class Dilma {
       batch = mainScreen.batch;
       velocity = new Vector2(0.0f, 0.0f);
       gravity = new Vector2(0.0f, -20.0f);
+
+      holdingLadder = false;
+      canJumpAgain = true;
 
 //            MapProperties properties = object.getProperties();
 //
@@ -88,35 +92,6 @@ public class Dilma {
       return overlaps;
    }
 
-   private void handleCollision(float delta) {
-
-      for (int i = 0; i < collisionObjects.getCount(); i++) {
-         MapObject object = collisionObjects.get(i);
-
-         ShapeUtil.fillPolygon(object, tmpPolygon);
-
-         boolean overlaps = Intersector.overlapConvexPolygons(polygon, tmpPolygon, mtv);
-
-         if (overlaps) {
-            Gdx.app.log("Dilma", String.format("Object %d is overlapping by (x,y) (%.2f,%.2f,%.2f) ", i, mtv.normal.x, mtv.normal.y, mtv.depth));
-
-            bounds.x += mtv.normal.x * mtv.depth;
-            bounds.y += mtv.normal.y * mtv.depth;
-
-            if (Math.abs(mtv.normal.x) > 0 && mtv.normal.y == 0) {
-               velocity.x = 0;
-            }
-
-            if (Math.abs(mtv.normal.y) > 0) {
-               jump = 0;
-               landed = true;
-               velocity.y = 0;
-               canIncJump = false;
-            }
-         }
-      }
-   }
-
    public void draw() {
 
       shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -129,31 +104,13 @@ public class Dilma {
 
       boolean left = Gdx.input.isKeyPressed(Input.Keys.LEFT);
       boolean right = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
-      boolean actionJump = Gdx.input.isKeyPressed(Input.Keys.SPACE) || Gdx.input.isKeyPressed(Input.Keys.UP);
 
-      if (actionJump) {
-         if (jump == 0 && velocity.y >= 0) {
-            jump = 1;
-            landed = false;
-            canIncJump = true;
-            velocity.y = 6.0f;
-         } else if (canIncJump && jump == 1 && velocity.y < 5.0f) {
-            jump = 2;
-            velocity.y = 7.0f;
-//            } else if (canIncJump && jump == 2 && velocity.y < 5.0f) {
-//                jump = 3;
-//                velocity.y = 4.0f;
-         }
-      } else if (!actionJump && jump > 0) {
-         canIncJump = false;
-      }
+      boolean up = Gdx.input.isKeyPressed(Input.Keys.UP);
+      boolean down = Gdx.input.isKeyPressed(Input.Keys.DOWN);
 
       velocity.mulAdd(gravity, delta);
 
       boolean overlapsLadders = overlapsLadders(delta);
-
-      boolean up = Gdx.input.isKeyPressed(Input.Keys.UP);
-      boolean down = Gdx.input.isKeyPressed(Input.Keys.DOWN);
 
       if (overlapsLadders) {
          if (up || down) {
@@ -165,7 +122,7 @@ public class Dilma {
 
       if (holdingLadder) {
 
-         velocity.y = 0f;
+         land();
 
          if (up || down) {
             if (velocity.y <= 1f && velocity.y >= -1f) {
@@ -176,6 +133,27 @@ public class Dilma {
                velocity.y += (down ? -1f : 1f) * MOVEMENT_RESISTENCY * delta;
             }
          }
+      }
+
+      boolean jumpKeys = Gdx.input.isKeyPressed(Input.Keys.SPACE) || up;
+
+      if (jumpKeys) {
+         if (canJumpAgain && jump == 0 && landed) {
+            jump = 1;
+            landed = false;
+            canIncJump = true;
+            velocity.y = 6.0f;
+         } else if (canIncJump && jump == 1 && velocity.y < 5.0f) {
+            jump = 2;
+            velocity.y = 7.0f;
+//            } else if (canIncJump && jump == 2 && velocity.y < 5.0f) {
+//                jump = 3;
+//                velocity.y = 4.0f;
+         }
+         canJumpAgain = false;
+      } else {
+         canIncJump = false;
+         canJumpAgain = true;
       }
 
       if (left || right) {
@@ -209,5 +187,38 @@ public class Dilma {
       polygon.setPosition(bounds.x, bounds.y);
 
       Gdx.app.log("Dilma", String.format("X,Y (%.2f,%.2f) velocity (x,y) (%.2f,%.2f) ", bounds.x, bounds.y, velocity.x, velocity.y));
+   }
+
+   private void handleCollision(float delta) {
+
+      for (int i = 0; i < collisionObjects.getCount(); i++) {
+         MapObject object = collisionObjects.get(i);
+
+         ShapeUtil.fillPolygon(object, tmpPolygon);
+
+         boolean overlaps = Intersector.overlapConvexPolygons(polygon, tmpPolygon, mtv);
+
+         if (overlaps) {
+            Gdx.app.log("Dilma", String.format("Object %d is overlapping by (x,y) (%.2f,%.2f,%.2f) ", i, mtv.normal.x, mtv.normal.y, mtv.depth));
+
+            bounds.x += mtv.normal.x * mtv.depth;
+            bounds.y += mtv.normal.y * mtv.depth;
+
+            if (Math.abs(mtv.normal.x) > 0 && mtv.normal.y == 0) {
+               velocity.x = 0;
+            }
+
+            if (Math.abs(mtv.normal.y) > 0) {
+               land();
+            }
+         }
+      }
+   }
+
+   private void land() {
+      jump = 0;
+      landed = true;
+      velocity.y = 0;
+      canIncJump = false;
    }
 }

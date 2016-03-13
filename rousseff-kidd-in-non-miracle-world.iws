@@ -3,10 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="90b9085c-ae1f-4f4b-8125-1e0bc6142104" name="Default" comment="formating&#10;">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/Dilma.java" afterPath="$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/Dilma.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/MainScreen.java" afterPath="$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/MainScreen.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/ShapeUtil.java" afterPath="$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/ShapeUtil.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rousseff-kidd-in-non-miracle-world.iws" afterPath="$PROJECT_DIR$/rousseff-kidd-in-non-miracle-world.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/assets/tiles.tmx" afterPath="$PROJECT_DIR$/core/assets/tiles.tmx" />
     </list>
     <ignored path="rousseff-kidd-in-non-miracle-world.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -93,8 +89,8 @@
       <file leaf-file-name="Dilma.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/Dilma.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.21997301">
-              <caret line="157" column="28" selection-start-line="157" selection-start-column="28" selection-end-line="157" selection-end-column="28" />
+            <state vertical-scroll-proportion="0.022941971">
+              <caret line="124" column="16" selection-start-line="124" selection-start-column="16" selection-end-line="124" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -1313,7 +1309,7 @@
           <properties />
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="38" />
+      <option name="time" value="39" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -1657,8 +1653,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/Dilma.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.21997301">
-          <caret line="157" column="28" selection-start-line="157" selection-start-column="28" selection-end-line="157" selection-end-column="28" />
+        <state vertical-scroll-proportion="0.022941971">
+          <caret line="124" column="16" selection-start-line="124" selection-start-column="16" selection-end-line="124" selection-end-column="16" />
           <folding />
         </state>
       </provider>
