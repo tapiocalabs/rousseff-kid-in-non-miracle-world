@@ -4,7 +4,6 @@
     <list default="true" id="90b9085c-ae1f-4f4b-8125-1e0bc6142104" name="Default" comment="formating&#10;">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/Dilma.java" afterPath="$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/Dilma.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rousseff-kidd-in-non-miracle-world.iws" afterPath="$PROJECT_DIR$/rousseff-kidd-in-non-miracle-world.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/assets/tiles.tmx" afterPath="$PROJECT_DIR$/core/assets/tiles.tmx" />
     </list>
     <ignored path="rousseff-kidd-in-non-miracle-world.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -91,8 +90,8 @@
       <file leaf-file-name="Dilma.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/Dilma.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.1605938">
-              <caret line="143" column="5" selection-start-line="143" selection-start-column="5" selection-end-line="143" selection-end-column="5" />
+            <state vertical-scroll-proportion="0.33333334">
+              <caret line="80" column="41" selection-start-line="80" selection-start-column="41" selection-end-line="80" selection-end-column="41" />
               <folding />
             </state>
           </provider>
@@ -1655,8 +1654,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/Dilma.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1605938">
-          <caret line="143" column="5" selection-start-line="143" selection-start-column="5" selection-end-line="143" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.33333334">
+          <caret line="80" column="41" selection-start-line="80" selection-start-column="41" selection-end-line="80" selection-end-column="41" />
           <folding />
         </state>
       </provider>
