@@ -160,16 +160,12 @@ public class Dilma {
 
          if (velocity.x > 1f || velocity.x < -1f) {
 
-            if (landed){
-
+            if (landed) { // ground inertia
                velocity.x += (velocity.x > 0 ? -1f : 1f) * MOVEMENT_RESISTENCY_LANDED * delta;
 
-            }else{
-
+            } else { // air inertia
                velocity.x += (velocity.x > 0 ? -1f : 1f) * MOVEMENT_RESISTENCY_AIR * delta;
             }
-
-
          } else if (velocity.x <= 1f && velocity.x >= -1f) {
             velocity.x = 0.0f;
          }
