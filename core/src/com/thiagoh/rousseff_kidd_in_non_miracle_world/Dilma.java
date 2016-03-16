@@ -60,16 +60,6 @@ public class Dilma {
 
       holdingLadder = false;
       canJumpAgain = true;
-
-//            MapProperties properties = object.getProperties();
-//
-//            Iterator<String> keys = properties.getKeys();
-//
-//            while (keys.hasNext()) {
-//
-//                String key = keys.next();
-//                Gdx.app.log("Dilma", String.format("Object %d Key %s Value: %s", i, key, properties.get(key)));
-//            }
    }
 
    public void update(float delta) {
