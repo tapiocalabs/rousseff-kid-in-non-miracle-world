@@ -23,7 +23,8 @@ public class Dilma {
    private static final float DILMA_WIDTH = 0.3f;
    private static final float DILMA_HEIGHT = 1.6f;
    private static final float MAX_VELOCITY = 6.0f;
-   private static final float MOVEMENT_RESISTENCY = 20.0f;
+   private static final float MOVEMENT_RESISTENCY_LANDED = 20.0f;
+   private static final float MOVEMENT_RESISTENCY_AIR = 6.0f;
    private static final float INITIAL_X_VELOCITY = 3.0f;
    private static final float INITIAL_Y_VELOCITY = 3.0f;
    final Rectangle bounds = new Rectangle(0, 0, DILMA_WIDTH, DILMA_HEIGHT);
@@ -59,16 +60,6 @@ public class Dilma {
 
       holdingLadder = false;
       canJumpAgain = true;
-
-//            MapProperties properties = object.getProperties();
-//
-//            Iterator<String> keys = properties.getKeys();
-//
-//            while (keys.hasNext()) {
-//
-//                String key = keys.next();
-//                Gdx.app.log("Dilma", String.format("Object %d Key %s Value: %s", i, key, properties.get(key)));
-//            }
    }
 
    public void update(float delta) {
@@ -128,9 +119,9 @@ public class Dilma {
             if (velocity.y <= 1f && velocity.y >= -1f) {
                velocity.y = (down ? -1f : 1f) * INITIAL_Y_VELOCITY;
             } else if (down && velocity.y > 0 || up && velocity.y < 0) {
-               velocity.y += (velocity.y > 0 ? -1f : 1f) * (MOVEMENT_RESISTENCY + INITIAL_Y_VELOCITY) * delta;
+               velocity.y += (velocity.y > 0 ? -1f : 1f) * (MOVEMENT_RESISTENCY_LANDED + INITIAL_Y_VELOCITY) * delta;
             } else {
-               velocity.y += (down ? -1f : 1f) * MOVEMENT_RESISTENCY * delta;
+               velocity.y += (down ? -1f : 1f) * MOVEMENT_RESISTENCY_LANDED * delta;
             }
          }
       }
@@ -160,14 +151,21 @@ public class Dilma {
          if (velocity.x <= 1f && velocity.x >= -1f) {
             velocity.x = (left ? -1f : 1f) * INITIAL_X_VELOCITY;
          } else if (left && velocity.x > 0 || right && velocity.x < 0) {
-            velocity.x += (velocity.x > 0 ? -1f : 1f) * (MOVEMENT_RESISTENCY + INITIAL_X_VELOCITY) * delta;
+            velocity.x += (velocity.x > 0 ? -1f : 1f) * (MOVEMENT_RESISTENCY_LANDED + INITIAL_X_VELOCITY) * delta;
          } else {
             velocity.x += (left ? -1f : 1f) * 5f * delta;
          }
       } else {
          // inertia
+
          if (velocity.x > 1f || velocity.x < -1f) {
-            velocity.x += (velocity.x > 0 ? -1f : 1f) * MOVEMENT_RESISTENCY * delta;
+
+            if (landed) { // ground inertia
+               velocity.x += (velocity.x > 0 ? -1f : 1f) * MOVEMENT_RESISTENCY_LANDED * delta;
+
+            } else { // air inertia
+               velocity.x += (velocity.x > 0 ? -1f : 1f) * MOVEMENT_RESISTENCY_AIR * delta;
+            }
          } else if (velocity.x <= 1f && velocity.x >= -1f) {
             velocity.x = 0.0f;
          }

@@ -3,7 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="90b9085c-ae1f-4f4b-8125-1e0bc6142104" name="Default" comment="formating&#10;">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/Dilma.java" afterPath="$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/Dilma.java" />
+<<<<<<< HEAD
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/ShapeUtil.java" afterPath="$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/ShapeUtil.java" />
+=======
+>>>>>>> f4725e5c8aa1b01958c25094a59afcbc82949e72
     </list>
     <ignored path="rousseff-kidd-in-non-miracle-world.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -80,8 +83,13 @@
       <file leaf-file-name="Dilma.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/Dilma.java">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state vertical-scroll-proportion="2.5511727">
               <caret line="203" column="25" selection-start-line="203" selection-start-column="25" selection-end-line="203" selection-end-column="25" />
+=======
+            <state vertical-scroll-proportion="0.5964912">
+              <caret line="166" column="0" selection-start-line="166" selection-start-column="0" selection-end-line="166" selection-end-column="0" />
+>>>>>>> f4725e5c8aa1b01958c25094a59afcbc82949e72
               <folding />
             </state>
           </provider>
@@ -1569,8 +1577,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/thiagoh/rousseff_kidd_in_non_miracle_world/Dilma.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state vertical-scroll-proportion="2.5511727">
           <caret line="203" column="25" selection-start-line="203" selection-start-column="25" selection-end-line="203" selection-end-column="25" />
+=======
+        <state vertical-scroll-proportion="0.5964912">
+          <caret line="166" column="0" selection-start-line="166" selection-start-column="0" selection-end-line="166" selection-end-column="0" />
+>>>>>>> f4725e5c8aa1b01958c25094a59afcbc82949e72
           <folding />
         </state>
       </provider>
