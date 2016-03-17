@@ -186,7 +186,7 @@ public class Dilma {
 
       polygon.setPosition(bounds.x, bounds.y);
 
-      Gdx.app.log("Dilma", String.format("X,Y (%.2f,%.2f) velocity (x,y) (%.2f,%.2f) ", bounds.x, bounds.y, velocity.x, velocity.y));
+      Gdx.app.debug("Dilma", String.format("X,Y (%.2f,%.2f) velocity (x,y) (%.2f,%.2f) ", bounds.x, bounds.y, velocity.x, velocity.y));
    }
 
    private void handleCollision(float delta) {
@@ -201,7 +201,7 @@ public class Dilma {
          boolean overlaps = Intersector.overlapConvexPolygons(polygon, tmpPolygon, mtv);
 
          if (overlaps) {
-            Gdx.app.log("Dilma", String.format("Object %d is overlapping by (x,y) (%.2f,%.2f,%.2f) ", i, mtv.normal.x, mtv.normal.y, mtv.depth));
+            Gdx.app.debug("Dilma", String.format("Object %d is overlapping by (x,y) (%.2f,%.2f,%.2f) ", i, mtv.normal.x, mtv.normal.y, mtv.depth));
 
             bounds.x += mtv.normal.x * mtv.depth;
             bounds.y += mtv.normal.y * mtv.depth;
