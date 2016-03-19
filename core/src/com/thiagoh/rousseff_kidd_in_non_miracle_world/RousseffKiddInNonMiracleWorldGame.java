@@ -5,18 +5,18 @@ import com.badlogic.gdx.assets.AssetManager;
 
 public class RousseffKiddInNonMiracleWorldGame extends Game {
 
-   private final AssetManager assetManager;
+	private final AssetManager assetManager;
 
-   public RousseffKiddInNonMiracleWorldGame() {
-      assetManager = new AssetManager();
-   }
+	public RousseffKiddInNonMiracleWorldGame() {
+		assetManager = new AssetManager();
+	}
 
-   @Override
-   public void create() {
-      setScreen(new LoadingScreen(this));
-   }
+	@Override
+	public void create() {
+		setScreen(new LoadingScreen(this));
+	}
 
-   public AssetManager getAssetManager() {
-      return assetManager;
-   }
+	public AssetManager getAssetManager() {
+		return assetManager;
+	}
 }

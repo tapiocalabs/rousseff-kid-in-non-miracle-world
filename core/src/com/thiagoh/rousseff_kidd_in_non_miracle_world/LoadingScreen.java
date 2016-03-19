@@ -18,79 +18,79 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 public class LoadingScreen extends ScreenAdapter {
 
-   private static final float WORLD_WIDTH = 640.0f;
-   private static final float WORLD_HEIGHT = 480.0f;
-   private static final float PROGRESS_BAR_HEIGHT = 25.0f;
-   private static final float PROGRESS_BAR_WIDTH = 200;
-   private final RousseffKiddInNonMiracleWorldGame game;
-   private final ShapeRenderer shapeRenderer;
-   private float progress;
-   private OrthographicCamera camera;
-   private Viewport viewport;
+	private static final float WORLD_WIDTH = 640.0f;
+	private static final float WORLD_HEIGHT = 480.0f;
+	private static final float PROGRESS_BAR_HEIGHT = 25.0f;
+	private static final float PROGRESS_BAR_WIDTH = 200;
+	private final RousseffKiddInNonMiracleWorldGame game;
+	private final ShapeRenderer shapeRenderer;
+	private float progress;
+	private OrthographicCamera camera;
+	private Viewport viewport;
 
-   public LoadingScreen(RousseffKiddInNonMiracleWorldGame game) {
-      this.game = game;
-      this.progress = 0.0f;
-      shapeRenderer = new ShapeRenderer();
-   }
+	public LoadingScreen(RousseffKiddInNonMiracleWorldGame game) {
+		this.game = game;
+		this.progress = 0.0f;
+		shapeRenderer = new ShapeRenderer();
+	}
 
-   @Override
-   public void show() {
-      super.show();
+	@Override
+	public void show() {
+		super.show();
 
-      camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-      camera.position.set(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, 0);
-      camera.update();
+		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera.position.set(WORLD_WIDTH / 2, WORLD_HEIGHT / 2, 0);
+		camera.update();
 
-      viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
+		viewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 
-      AssetManager assetManager = game.getAssetManager();
+		AssetManager assetManager = game.getAssetManager();
 
-      assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
+		assetManager.setLoader(TiledMap.class, new TmxMapLoader(new InternalFileHandleResolver()));
 
-      assetManager.load("tiles.tmx", TiledMap.class);
+		assetManager.load("tiles.tmx", TiledMap.class);
 
-      assetManager.finishLoading();
-   }
+		assetManager.finishLoading();
+	}
 
-   @Override
-   public void dispose() {
-      shapeRenderer.dispose();
-   }
+	@Override
+	public void dispose() {
+		shapeRenderer.dispose();
+	}
 
-   private void clearScreen() {
-      Gdx.gl.glClearColor(0f, 0f, 0f, 1);
-      Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-   }
+	private void clearScreen() {
+		Gdx.gl.glClearColor(0f, 0f, 0f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+	}
 
-   private void update() {
-      AssetManager assetManager = game.getAssetManager();
+	private void update() {
+		AssetManager assetManager = game.getAssetManager();
 
-      if (assetManager.update()) {
-         game.setScreen(new MainScreen(game));
-      } else {
-         progress = assetManager.getProgress();
-      }
-   }
+		if (assetManager.update()) {
+			game.setScreen(new MainScreen(game));
+		} else {
+			progress = assetManager.getProgress();
+		}
+	}
 
-   @Override
-   public void render(float delta) {
-      super.render(delta);
+	@Override
+	public void render(float delta) {
+		super.render(delta);
 
-      update();
-      clearScreen();
-      draw();
-   }
+		update();
+		clearScreen();
+		draw();
+	}
 
-   private void draw() {
+	private void draw() {
 
-      shapeRenderer.setProjectionMatrix(camera.projection);
-      shapeRenderer.setTransformMatrix(camera.view);
+		shapeRenderer.setProjectionMatrix(camera.projection);
+		shapeRenderer.setTransformMatrix(camera.view);
 
-      shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-      shapeRenderer.setColor(Color.WHITE);
+		shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		shapeRenderer.setColor(Color.WHITE);
 
-      shapeRenderer.rect((WORLD_WIDTH / 2) - (PROGRESS_BAR_WIDTH / 2), WORLD_HEIGHT / 2, PROGRESS_BAR_WIDTH * progress, PROGRESS_BAR_HEIGHT);
-      shapeRenderer.end();
-   }
+		shapeRenderer.rect((WORLD_WIDTH / 2) - (PROGRESS_BAR_WIDTH / 2), WORLD_HEIGHT / 2, PROGRESS_BAR_WIDTH * progress, PROGRESS_BAR_HEIGHT);
+		shapeRenderer.end();
+	}
 }
