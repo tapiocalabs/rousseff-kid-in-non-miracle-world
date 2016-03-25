@@ -52,8 +52,8 @@
   <object id="281" name="initial" x="2732.94" y="502.74" width="7.42638" height="6.84746"/>
  </objectgroup>
  <objectgroup name="ceils">
-  <object id="286" name="ceil1" x="0" y="64" width="32" height="448"/>
-  <object id="285" name="ceil2" x="0" y="704" width="32" height="416"/>
+  <object id="286" name="ceil1" x="0" y="64" width="32" height="545.333"/>
+  <object id="285" name="ceil2" x="0" y="672" width="32" height="448"/>
  </objectgroup>
  <objectgroup name="collectables">
   <object id="300" type="pink_diamond" x="3078" y="425.667" width="19.3333" height="17.3333"/>
